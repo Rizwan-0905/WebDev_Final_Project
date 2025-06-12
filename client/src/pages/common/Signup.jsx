@@ -33,26 +33,43 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <br />
-        <input type="text" name="userName" placeholder="Username" value={form.userName} onChange={handleChange} required />
-        <br />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <br />
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="userName"
+          placeholder="Username"
+          value={form.userName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
         <select
-  name="role"
-  value={form.role}
-  onChange={handleChange}
-  required
->
-  <option value="" disabled>Select role</option>
-  <option value="client">Client</option>
-  <option value="seller">Seller</option>
-</select>
-<br />
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          required
+        >
+          <option value="" disabled>Select role</option>
+          <option value="client">Client</option>
+          <option value="seller">Seller</option>
+        </select>
         <button type="submit">Sign Up</button>
       </form>
       {message && <p>{message}</p>}
