@@ -1,5 +1,6 @@
 import './Header.css';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Header() {
   return (
@@ -9,6 +10,10 @@ function Header() {
         <p className="mt-2 text-sm sm:text-base header-subtitle">
           Connecting talent with tasks — effortlessly.
         </p>
+        <div className="mt-4 space-x-4">
+          <Link to="/login" className="underline hover:text-gray-200">Login</Link>
+          <Link to="/signup" className="underline hover:text-gray-200">Signup</Link>
+        </div>
       </div>
     </header>
   );
