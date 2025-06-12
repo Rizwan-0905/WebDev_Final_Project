@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const jwt = require("jsonwebtoken");
 const taskSchema = new mongoose.Schema(
   {
     title: {
@@ -27,13 +27,13 @@ const taskSchema = new mongoose.Schema(
 
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
 
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       default: null,
     },
 
@@ -53,7 +53,7 @@ const taskSchema = new mongoose.Schema(
       {
         freelancer: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+          ref: "user",
         },
         message: String,
         bid: Number,

@@ -1,49 +1,53 @@
-import React, { useState } from 'react';
+// pages/common/Login.jsx
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [form, setForm] = useState({
+const Login = ({ setCurrentUser }) => {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    userName: '',
-    password: '',
-  });
-  const [message, setMessage] = useState('');
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await fetch('http://localhost:8000/api/user/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+      const res = await axios.post("http://localhost:8000/api/user/login", { userName, password }); // Update with your API endpoint
+      const { token, user } = res.data;
 
-      const data = await res.json();
-      setMessage(data.message || 'Login successful!');
-    } catch (error) {
-      console.error('Login Error:', error);
-      setMessage('Something went wrong.');
+      // Store token + user in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      setCurrentUser(user);
+
+      // Redirect based on role
+      if (user.role === "seller") {
+        navigate("/seller/home");
+      } else {
+        navigate("/client/home");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        
-        <input type="text" name="userName" placeholder="Username" value={form.userName} onChange={handleChange} required />
-        <br />
-        <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <br />
-       
-        <button type="submit">Login</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <form onSubmit={handleLogin}>
+      <input
+        type="text"
+        placeholder="Username"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Login</button>
+    </form>
   );
 };
 

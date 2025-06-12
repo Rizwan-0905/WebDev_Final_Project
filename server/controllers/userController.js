@@ -1,22 +1,38 @@
 const User = require("../models/user");
 
+const jwt = require("jsonwebtoken");
+// adjust path as needed
+
 exports.login = async (req, res) => {
   try {
-    const user = await User.findOne({ userName: req.body.userName });
+    const { userName, password } = req.body;
+
+    const user = await User.findOne({ userName });
     if (!user) {
       return res
         .status(401)
         .json({ message: "Incorrect username or password" });
     }
 
-    const isMatch = await user.comparePassword(req.body.password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res
         .status(401)
         .json({ message: "Incorrect username or password" });
     }
 
-    res.status(200).json({ message: `Welcome ${user.name}`, user });
+    const token = user.generateJWT(); // method from model
+
+    res.status(200).json({
+      message: `Welcome ${user.name}`,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        userName: user.userName,
+        role: user.role,
+      },
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

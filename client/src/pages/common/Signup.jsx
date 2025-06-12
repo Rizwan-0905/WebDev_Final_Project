@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -8,6 +9,7 @@ const Signup = () => {
     role: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,7 +26,13 @@ const Signup = () => {
       });
 
       const data = await res.json();
-      setMessage(data.message || 'Signup successful!');
+
+      if (res.ok) {
+        setMessage(data.message || 'Signup successful!');
+        navigate('/login'); // Redirect on success
+      } else {
+        setMessage(data.message || 'Signup failed.');
+      }
     } catch (error) {
       console.error('Signup Error:', error);
       setMessage('Something went wrong.');
@@ -41,17 +49,12 @@ const Signup = () => {
         <br />
         <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
         <br />
-        <select
-  name="role"
-  value={form.role}
-  onChange={handleChange}
-  required
->
-  <option value="" disabled>Select role</option>
-  <option value="client">Client</option>
-  <option value="seller">Seller</option>
-</select>
-<br />
+        <select name="role" value={form.role} onChange={handleChange} required>
+          <option value="" disabled>Select role</option>
+          <option value="client">Client</option>
+          <option value="seller">Seller</option>
+        </select>
+        <br />
         <button type="submit">Sign Up</button>
       </form>
       {message && <p>{message}</p>}
